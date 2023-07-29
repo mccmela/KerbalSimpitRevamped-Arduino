@@ -9,7 +9,8 @@
 #include "KerbalSimpit.h"
 
 const int SAS_SWITCH_PIN = 2; // the pin used for controlling SAS.
-const int RCS_SWITCH_PIN = 5; // the pin used for controlling RCS.
+const int RCS_SWITCH_PIN = 3; // the pin used for controlling RCS.
+const int GEAR_PIN = 5;
 
 //Store the current action status, as recevied by simpit.
 byte currentActionStatus = 0;
@@ -28,6 +29,7 @@ void setup() {
   // Set up the two switches with builtin pullup.
   pinMode(SAS_SWITCH_PIN, INPUT_PULLUP);
   pinMode(RCS_SWITCH_PIN, INPUT_PULLUP);
+  pinMode(GEAR_PIN, INPUT_PULLUP);
 
   // This loop continually attempts to handshake with the plugin.
   // It will keep retrying until it gets a successful handshake.
@@ -77,6 +79,20 @@ void loop() {
   if(!rcs_switch_state && (currentActionStatus & RCS_ACTION)){
     mySimpit.printToKSP("Desactivate RCS!");
     mySimpit.deactivateAction(RCS_ACTION);
+  }
+
+  // Get the GEAR switch state
+  bool gear_switch_state = digitalRead(GEAR_PIN);
+
+  // Update the GEAR to match the state, only if a change is needed to avoid
+  // spamming commands.
+  if(gear_switch_state && !(currentActionStatus & GEAR_ACTION)){
+    mySimpit.printToKSP("Deploy Gear!");
+    mySimpit.activateAction(GEAR_ACTION);
+  }
+  if(!gear_switch_state && (currentActionStatus & GEAR_ACTION)){
+    mySimpit.printToKSP("Retract Gear!");
+    mySimpit.deactivateAction(GEAR_ACTION);
   }
 }
 
