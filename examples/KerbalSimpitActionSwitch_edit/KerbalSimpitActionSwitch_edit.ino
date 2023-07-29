@@ -8,9 +8,19 @@
 */
 #include "KerbalSimpit.h"
 
-const int SAS_SWITCH_PIN = 2; // the pin used for controlling SAS.
+const int SAS_SWITCH_PIN = 7; // the pin used for controlling SAS.
 const int RCS_SWITCH_PIN = 3; // the pin used for controlling RCS.
 const int GEAR_PIN = 5;
+const int STAGE_PIN = 2;
+//deleted const int ledPin = 13 from Stage.Demo
+
+// Variables will change:
+int ledState = HIGH;         // the current state of the output pin
+int stageState;             // the current reading from the input pin
+int lastStageState = LOW;   // the previous reading from the input pin
+
+unsigned long lastDebounceTime = 0;  
+unsigned long debounceDelay = 50; 
 
 //Store the current action status, as recevied by simpit.
 byte currentActionStatus = 0;
@@ -25,8 +35,10 @@ void setup() {
   // Set up the build in LED, and turn it on.
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
+  
 
-  // Set up the two switches with builtin pullup.
+  // Set up the switches with builtin pullup.
+  pinMode(STAGE_PIN, INPUT_PULLUP);
   pinMode(SAS_SWITCH_PIN, INPUT_PULLUP);
   pinMode(RCS_SWITCH_PIN, INPUT_PULLUP);
   pinMode(GEAR_PIN, INPUT_PULLUP);
@@ -94,6 +106,46 @@ void loop() {
     mySimpit.printToKSP("Retract Gear!");
     mySimpit.deactivateAction(GEAR_ACTION);
   }
+
+// Read the state of the STAGING switch into a local variable.
+  int reading_stage = digitalRead(STAGE_PIN);
+
+  // check to see if you just pressed the button
+  // (i.e. the input went from LOW to HIGH),  and you've waited
+  // long enough since the last press to ignore any noise:
+
+  // If the switch changed, due to noise or pressing:
+  if (reading_stage != lastStageState) {
+    // reset the debouncing timer
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    // whatever the reading is at, it's been there for longer
+    // than the debounce delay, so take it as the actual current state:
+
+    // if the button state has changed:
+    if (reading_stage != stageState) {
+      stageState = reading_stage;
+
+      // If the new button state is HIGH, that means the button
+      // has just been pressed.
+      if (stageState == HIGH) {
+        // Send a message to the plugin activating the Stage
+        // action group. The plugin will then activate the
+        // next stage.
+        mySimpit.activateAction(STAGE_ACTION);
+      }
+    }
+  }
+
+  // Set the LED to match the state of the button.
+  digitalWrite(LED_BUILTIN, stageState);
+
+  // save the reading.  Next time through the loop,
+  // it'll be the lastButtonState:
+  lastStageState = reading_stage;
+
 }
 
 void messageHandler(byte messageType, byte msg[], byte msgSize) {
