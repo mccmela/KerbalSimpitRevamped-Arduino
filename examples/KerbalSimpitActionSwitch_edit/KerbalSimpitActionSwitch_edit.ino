@@ -6,13 +6,24 @@
    In addition, the LED_BUILTIN matches the SAS state.
 
 */
-#include "KerbalSimpit.h"
+#include "KerbalSimpit.h" //deleted const int ledPin = 13 from Stage.Demo
 
-const int SAS_SWITCH_PIN = 7; // the pin used for controlling SAS.
+//BUTTONS - 10 pins
+const int STAGE_PIN = 2;
 const int RCS_SWITCH_PIN = 3; // the pin used for controlling RCS.
 const int GEAR_PIN = 5;
-const int STAGE_PIN = 2;
-//deleted const int ledPin = 13 from Stage.Demo
+const int SAS_SWITCH_PIN = 7; // the pin used for controlling SAS.
+// const int LIGHTS_PIN = X
+// const int solar panels
+// const int ladder
+// const int chutes? 
+// const int BRAKES_PIN
+// const int ABORT_PIN
+
+//ANALOG - 7 pins
+// throttle
+// translation
+// rotation
 
 // Variables will change:
 int ledState = HIGH;         // the current state of the output pin
@@ -39,9 +50,15 @@ void setup() {
 
   // Set up the switches with builtin pullup.
   pinMode(STAGE_PIN, INPUT_PULLUP);
-  pinMode(SAS_SWITCH_PIN, INPUT_PULLUP);
   pinMode(RCS_SWITCH_PIN, INPUT_PULLUP);
   pinMode(GEAR_PIN, INPUT_PULLUP);
+  pinMode(SAS_SWITCH_PIN, INPUT_PULLUP);
+//pinMode(LIGHTS_PIN, INPUT_PULLUP)
+//pinMode(SOLAR_PIN, INPUT_PULLUP)
+//pinMode(ladder)
+//pinMode(chutes)
+//pinMode(BRAKES_PIN, INPUT_PULLUP)
+//pinMode(ABORT_PIN, INPUT_PULLEP)  
 
   // This loop continually attempts to handshake with the plugin.
   // It will keep retrying until it gets a successful handshake.
@@ -107,6 +124,21 @@ void loop() {
     mySimpit.deactivateAction(GEAR_ACTION);
   }
 
+// Get the LIGHTS switch state
+  bool lights_switch_state = digitalRead(LIGHTS_PIN);
+
+  // Update the LIGHTS to match the state, only if a change is needed to avoid
+  // spamming commands.
+  if(lights_switch_state && !(currentActionStatus & LIGHT_ACTION)){
+    mySimpit.printToKSP("ILLUMINATION!");
+    mySimpit.activateAction(LIGHT_ACTION);
+  }
+  if(!lights_switch_state && (currentActionStatus & LIGHT_ACTION)){
+    mySimpit.printToKSP("Get Dark!");
+    mySimpit.deactivateAction(LIGHT_ACTION);
+  }
+
+//Anyway to get it to print on screen "Energize?" when we press button?
 // Read the state of the STAGING switch into a local variable.
   int reading_stage = digitalRead(STAGE_PIN);
 
