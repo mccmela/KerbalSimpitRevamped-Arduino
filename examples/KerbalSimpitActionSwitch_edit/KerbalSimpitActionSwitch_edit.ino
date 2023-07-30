@@ -13,12 +13,12 @@ const int STAGE_PIN = 2;
 const int RCS_SWITCH_PIN = 3; // the pin used for controlling RCS.
 const int GEAR_PIN = 5;
 const int SAS_SWITCH_PIN = 7; // the pin used for controlling SAS.
-// const int LIGHTS_PIN = X
+const int LIGHTS_PIN = 4;
 // const int solar panels
 // const int ladder
 // const int chutes? 
-// const int BRAKES_PIN
-// const int ABORT_PIN
+const int BRAKES_PIN = 8;
+const int ABORT_PIN = 6;
 
 //ANALOG - 7 pins
 // throttle
@@ -53,12 +53,12 @@ void setup() {
   pinMode(RCS_SWITCH_PIN, INPUT_PULLUP);
   pinMode(GEAR_PIN, INPUT_PULLUP);
   pinMode(SAS_SWITCH_PIN, INPUT_PULLUP);
-//pinMode(LIGHTS_PIN, INPUT_PULLUP)
+  pinMode(LIGHTS_PIN, INPUT_PULLUP);
 //pinMode(SOLAR_PIN, INPUT_PULLUP)
 //pinMode(ladder)
 //pinMode(chutes)
-//pinMode(BRAKES_PIN, INPUT_PULLUP)
-//pinMode(ABORT_PIN, INPUT_PULLEP)  
+  pinMode(BRAKES_PIN, INPUT_PULLUP);
+  pinMode(ABORT_PIN, INPUT_PULLEP) ; 
 
   // This loop continually attempts to handshake with the plugin.
   // It will keep retrying until it gets a successful handshake.
@@ -88,11 +88,11 @@ void loop() {
   // Update the SAS to match the state, only if a change is needed to avoid
   // spamming commands.
   if(sas_switch_state && !(currentActionStatus & SAS_ACTION)){
-    mySimpit.printToKSP("Activate SAS!");
+    mySimpit.printToKSP("Activate SAS!", PRINT_TO_SCREEN);
     mySimpit.activateAction(SAS_ACTION);
   }
   if(!sas_switch_state && (currentActionStatus & SAS_ACTION)){
-    mySimpit.printToKSP("Desactivate SAS!");
+    mySimpit.printToKSP("Desactivate SAS!", PRINT_TO_SCREEN);
     mySimpit.deactivateAction(SAS_ACTION);
   }
 
@@ -102,11 +102,11 @@ void loop() {
   // Update the RCS to match the state, only if a change is needed to avoid
   // spamming commands.
   if(rcs_switch_state && !(currentActionStatus & RCS_ACTION)){
-    mySimpit.printToKSP("Activate RCS!");
+    mySimpit.printToKSP("Activate RCS!", PRINT_TO_SCREEN);
     mySimpit.activateAction(RCS_ACTION);
   }
   if(!rcs_switch_state && (currentActionStatus & RCS_ACTION)){
-    mySimpit.printToKSP("Desactivate RCS!");
+    mySimpit.printToKSP("Desactivate RCS!", PRINT_TO_SCREEN);
     mySimpit.deactivateAction(RCS_ACTION);
   }
 
@@ -116,11 +116,11 @@ void loop() {
   // Update the GEAR to match the state, only if a change is needed to avoid
   // spamming commands.
   if(gear_switch_state && !(currentActionStatus & GEAR_ACTION)){
-    mySimpit.printToKSP("Deploy Gear!");
+    mySimpit.printToKSP("Deploy Gear!", PRINT_TO_SCREEN);
     mySimpit.activateAction(GEAR_ACTION);
   }
   if(!gear_switch_state && (currentActionStatus & GEAR_ACTION)){
-    mySimpit.printToKSP("Retract Gear!");
+    mySimpit.printToKSP("Retract Gear!", PRINT_TO_SCREEN);
     mySimpit.deactivateAction(GEAR_ACTION);
   }
 
@@ -130,12 +130,40 @@ void loop() {
   // Update the LIGHTS to match the state, only if a change is needed to avoid
   // spamming commands.
   if(lights_switch_state && !(currentActionStatus & LIGHT_ACTION)){
-    mySimpit.printToKSP("ILLUMINATION!");
+    mySimpit.printToKSP("ILLUMINATION!", PRINT_TO_SCREEN);
     mySimpit.activateAction(LIGHT_ACTION);
   }
   if(!lights_switch_state && (currentActionStatus & LIGHT_ACTION)){
-    mySimpit.printToKSP("Get Dark!");
+    mySimpit.printToKSP("Get Dark!", PRINT_TO_SCREEN);
     mySimpit.deactivateAction(LIGHT_ACTION);
+  }
+
+  // Get the ABORT switch state
+  bool abort_switch_state = digitalRead(ABORT_PIN);
+
+  // Update the ABORT to match the state, only if a change is needed to avoid
+  // spamming commands.
+  if(abort_switch_state && !(currentActionStatus & ABORT_ACTION)){
+    mySimpit.printToKSP("SHUT IT DOWN!", PRINT_TO_SCREEN);
+    mySimpit.activateAction(ABORT_ACTION);
+  }
+  if(!abort_switch_state && (currentActionStatus & ABORT_ACTION)){
+    mySimpit.printToKSP("RUN IT BACK!", PRINT_TO_SCREEN);
+    mySimpit.deactivateAction(ABORT_ACTION);
+  }
+
+  // Get the BRAKES switch state
+  bool brakes_switch_state = digitalRead(BRAKES_PIN);
+
+  // Update the BRAKES to match the state, only if a change is needed to avoid
+  // spamming commands.
+  if(brakes_switch_state && !(currentActionStatus & BRAKES_ACTION)){
+    mySimpit.printToKSP("Pump the brakes, turbo.", PRINT_TO_SCREEN);
+    mySimpit.activateAction(BRAKES_ACTION);
+  }
+  if(!brakes_switch_state && (currentActionStatus & BRAKES_ACTION)){
+    mySimpit.printToKSP("Punch it!", PRINT_TO_SCREEN);
+    mySimpit.deactivateAction(BRAKES_ACTION);
   }
 
 //Anyway to get it to print on screen "Energize?" when we press button?
@@ -167,6 +195,7 @@ void loop() {
         // action group. The plugin will then activate the
         // next stage.
         mySimpit.activateAction(STAGE_ACTION);
+        mySimpit.printToKSP("Energize!", PRINT_TO_SCREEN)
       }
     }
   }
