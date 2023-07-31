@@ -58,7 +58,7 @@ void setup() {
 //pinMode(ladder)
 //pinMode(chutes)
   pinMode(BRAKES_PIN, INPUT_PULLUP);
-  pinMode(ABORT_PIN, INPUT_PULLEP) ; 
+  pinMode(ABORT_PIN, INPUT_PULLUP); 
 
   // This loop continually attempts to handshake with the plugin.
   // It will keep retrying until it gets a successful handshake.
@@ -195,7 +195,7 @@ void loop() {
         // action group. The plugin will then activate the
         // next stage.
         mySimpit.activateAction(STAGE_ACTION);
-        mySimpit.printToKSP("Energize!", PRINT_TO_SCREEN)
+        mySimpit.printToKSP("Energize!", PRINT_TO_SCREEN);
       }
     }
   }
