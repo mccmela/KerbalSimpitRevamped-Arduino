@@ -1,9 +1,5 @@
-/* KerbalSimpitActionSwitch
-   A demonstration of using two switches to command both SAS and RCS.
-   In this example, the KSP state is monitored to update the SAS and RCS
-   to match the switch state. This ensure that when using the keyboard or when
-   switching vessels, the game will still match the switch positions.
-   In addition, the LED_BUILTIN matches the SAS state.
+/* Copie from the KerbalSimpitActionSwitch, initally. If there are three /// 
+eventually remove when the buttons are in place.
 
 */
 #include "KerbalSimpit.h" //deleted const int ledPin = 13 from Stage.Demo
@@ -14,16 +10,17 @@ const int RCS_SWITCH_PIN = 3; // the pin used for controlling RCS.
 const int GEAR_PIN = 5;
 const int SAS_SWITCH_PIN = 7; // the pin used for controlling SAS.
 const int LIGHTS_PIN = 4;
-// const int solar panels
-// const int ladder
-// const int chutes? 
+/// const int solar panels
+/// const int ladder
+/// const int chutes? 
 const int BRAKES_PIN = 8;
 const int ABORT_PIN = 6;
 
-//ANALOG - 7 pins
-// throttle
-// translation
-// rotation
+//ANALOG - 7 PINS
+///const int THROTTLE_PIN = A0; // the pin used for controlling throttle
+const int PITCH_PIN = A1;    // the pin used for controlling pitch
+///const int ROLL_PIN = A2;     // the pin used for controlling roll
+
 
 // Variables will change:
 int ledState = HIGH;         // the current state of the output pin
@@ -54,9 +51,9 @@ void setup() {
   pinMode(GEAR_PIN, INPUT_PULLUP);
   pinMode(SAS_SWITCH_PIN, INPUT_PULLUP);
   pinMode(LIGHTS_PIN, INPUT_PULLUP);
-//pinMode(SOLAR_PIN, INPUT_PULLUP)
-//pinMode(ladder)
-//pinMode(chutes)
+///pinMode(SOLAR_PIN, INPUT_PULLUP)
+///pinMode(ladder)
+///pinMode(chutes)
   pinMode(BRAKES_PIN, INPUT_PULLUP);
   pinMode(ABORT_PIN, INPUT_PULLUP); 
 
@@ -206,6 +203,30 @@ void loop() {
   // save the reading.  Next time through the loop,
   // it'll be the lastButtonState:
   lastStageState = reading_stage;
+
+
+//JOYSTICKS 
+///throttleMessage throttle_msg;
+  // Read the value of the potentiometer
+  ///int reading = analogRead(THROTTLE_PIN);
+  // Convert it in KerbalSimpit Range
+  ///throttle_msg.throttle = map(reading, 0, 1023, 0, INT16_MAX);
+  // Send the message
+  ///mySimpit.send(THROTTLE_MESSAGE, throttle_msg);
+
+  rotationMessage rot_msg;
+  // Read the values of the potentiometers
+  int reading_pitch = analogRead(PITCH_PIN);
+  ///int reading_roll = analogRead(ROLL_PIN);
+  // Convert them in KerbalSimpit range
+  int16_t pitch = map(reading_pitch, 0, 1023, INT16_MIN, INT16_MAX);
+  ///int16_t roll = map(reading_roll, 0, 1023, INT16_MIN, INT16_MAX);
+  // Put those values in the message
+  rot_msg.setPitch(pitch);
+ /// rot_msg.setRoll(roll);
+  // Send the message
+  mySimpit.send(ROTATION_MESSAGE, rot_msg);
+  mySimpit.printToKSP(String(reading_pitch), PRINT_TO_SCREEN);
 
 }
 
