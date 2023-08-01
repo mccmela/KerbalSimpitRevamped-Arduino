@@ -166,7 +166,7 @@ void loop() {
 //Anyway to get it to print on screen "Energize?" when we press button?
 // Read the state of the STAGING switch into a local variable.
   int reading_stage = digitalRead(STAGE_PIN);
-
+  ///bool intiate = false;
   // check to see if you just pressed the button
   // (i.e. the input went from LOW to HIGH),  and you've waited
   // long enough since the last press to ignore any noise:
@@ -192,7 +192,11 @@ void loop() {
         // action group. The plugin will then activate the
         // next stage.
         mySimpit.activateAction(STAGE_ACTION);
+           /// if (intiate == false) { 
         mySimpit.printToKSP("Energize!", PRINT_TO_SCREEN);
+           ///   intiate = true;
+       // }
+        
       }
     }
   }
@@ -226,7 +230,7 @@ void loop() {
  /// rot_msg.setRoll(roll);
   // Send the message
   mySimpit.send(ROTATION_MESSAGE, rot_msg);
-  mySimpit.printToKSP(String(reading_pitch), PRINT_TO_SCREEN);
+  ///mySimpit.printToKSP(String(reading_pitch));
 
 }
 
