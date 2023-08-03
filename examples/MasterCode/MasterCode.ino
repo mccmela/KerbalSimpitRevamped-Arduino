@@ -18,8 +18,9 @@ const int ABORT_PIN = 6;
 
 //ANALOG - 7 PINS
 ///const int THROTTLE_PIN = A0; // the pin used for controlling throttle
-const int PITCH_PIN = A1;    // the pin used for controlling pitch
-///const int ROLL_PIN = A2;     // the pin used for controlling roll
+const int PITCH_PIN = A0;
+const int ROLL_PIN = A1;    // the pin used for controlling roll
+const int YAW_PIN = A2;     // the pin used for controlling yaw
 
 
 // Variables will change:
@@ -221,13 +222,16 @@ void loop() {
   rotationMessage rot_msg;
   // Read the values of the potentiometers
   int reading_pitch = analogRead(PITCH_PIN);
-  ///int reading_roll = analogRead(ROLL_PIN);
+  int reading_roll = analogRead(ROLL_PIN);
+  int reading_yaw = analogRead(YAW_PIN);
   // Convert them in KerbalSimpit range
   int16_t pitch = map(reading_pitch, 0, 1023, INT16_MIN, INT16_MAX);
-  ///int16_t roll = map(reading_roll, 0, 1023, INT16_MIN, INT16_MAX);
+  int16_t roll = map(reading_roll, 0, 1023, INT16_MIN, INT16_MAX);
+  int16_t yaw = map(reading_yaw, 0, 1023, INT16_MIN, INT16_MAX);
   // Put those values in the message
   rot_msg.setPitch(pitch);
- /// rot_msg.setRoll(roll);
+  rot_msg.setRoll(roll);
+  rot_msg.setYaw(yaw);
   // Send the message
   mySimpit.send(ROTATION_MESSAGE, rot_msg);
   ///mySimpit.printToKSP(String(reading_pitch));
