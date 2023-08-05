@@ -5,23 +5,25 @@ eventually remove when the buttons are in place.
 #include "KerbalSimpit.h" //deleted const int ledPin = 13 from Stage.Demo
 
 //BUTTONS - 10 pins
-const int STAGE_PIN = 2;
-const int RCS_SWITCH_PIN = 3; // the pin used for controlling RCS.
-const int GEAR_PIN = 5;
-const int SAS_SWITCH_PIN = 7; // the pin used for controlling SAS.
+const int STAGE_PIN = 3;
+const int RCS_SWITCH_PIN = 6; // the pin used for controlling RCS.
+const int GEAR_PIN = 7;
+const int SAS_SWITCH_PIN = 5; // the pin used for controlling SAS.
 const int LIGHTS_PIN = 4;
 /// const int solar panels
 /// const int ladder
 /// const int chutes? 
-const int BRAKES_PIN = 8;
-const int ABORT_PIN = 6;
+///const int BRAKES_PIN = 8;
+const int ABORT_PIN = 2;
 
 //ANALOG - 7 PINS
-///const int THROTTLE_PIN = A0; // the pin used for controlling throttle
-const int PITCH_PIN = A0;
-const int ROLL_PIN = A1;    // the pin used for controlling roll
-const int YAW_PIN = A2;     // the pin used for controlling yaw
-
+const int THROTTLE_PIN = A0; // the pin used for controlling throttle
+const int PITCH_PIN = A14;
+const int ROLL_PIN = A13;    // the pin used for controlling roll
+const int YAW_PIN = A12;     // the pin used for controlling yaw
+const int TRANSX_PIN = A3;
+const int TRANSY_PIN = A2;
+const int TRANSZ_PIN = A1;
 
 // Variables will change:
 int ledState = HIGH;         // the current state of the output pin
@@ -55,7 +57,7 @@ void setup() {
 ///pinMode(SOLAR_PIN, INPUT_PULLUP)
 ///pinMode(ladder)
 ///pinMode(chutes)
-  pinMode(BRAKES_PIN, INPUT_PULLUP);
+ /// pinMode(BRAKES_PIN, INPUT_PULLUP);
   pinMode(ABORT_PIN, INPUT_PULLUP); 
 
   // This loop continually attempts to handshake with the plugin.
@@ -151,18 +153,18 @@ void loop() {
   }
 
   // Get the BRAKES switch state
-  bool brakes_switch_state = digitalRead(BRAKES_PIN);
+  ///bool brakes_switch_state = digitalRead(BRAKES_PIN);
 
   // Update the BRAKES to match the state, only if a change is needed to avoid
   // spamming commands.
-  if(brakes_switch_state && !(currentActionStatus & BRAKES_ACTION)){
-    mySimpit.printToKSP("Pump the brakes, turbo.", PRINT_TO_SCREEN);
-    mySimpit.activateAction(BRAKES_ACTION);
-  }
-  if(!brakes_switch_state && (currentActionStatus & BRAKES_ACTION)){
-    mySimpit.printToKSP("Punch it!", PRINT_TO_SCREEN);
-    mySimpit.deactivateAction(BRAKES_ACTION);
-  }
+  ///if(brakes_switch_state && !(currentActionStatus & BRAKES_ACTION)){
+    ///mySimpit.printToKSP("Pump the brakes, turbo.", PRINT_TO_SCREEN);
+    ///mySimpit.activateAction(BRAKES_ACTION);
+ /// }
+ /// if(!brakes_switch_state && (currentActionStatus & BRAKES_ACTION)){
+   /// mySimpit.printToKSP("Punch it!", PRINT_TO_SCREEN);
+   /// mySimpit.deactivateAction(BRAKES_ACTION);
+ /// }
 
 //Anyway to get it to print on screen "Energize?" when we press button?
 // Read the state of the STAGING switch into a local variable.
@@ -211,14 +213,15 @@ void loop() {
 
 
 //JOYSTICKS 
-///throttleMessage throttle_msg;
+throttleMessage throttle_msg;
   // Read the value of the potentiometer
-  ///int reading = analogRead(THROTTLE_PIN);
+  int reading = analogRead(THROTTLE_PIN);
   // Convert it in KerbalSimpit Range
-  ///throttle_msg.throttle = map(reading, 0, 1023, 0, INT16_MAX);
+  throttle_msg.throttle = map(reading, 0, 1023, 0, INT16_MAX);
   // Send the message
-  ///mySimpit.send(THROTTLE_MESSAGE, throttle_msg);
+  mySimpit.send(THROTTLE_MESSAGE, throttle_msg);
 
+  //Rotation
   rotationMessage rot_msg;
   // Read the values of the potentiometers
   int reading_pitch = analogRead(PITCH_PIN);
@@ -236,6 +239,23 @@ void loop() {
   mySimpit.send(ROTATION_MESSAGE, rot_msg);
   ///mySimpit.printToKSP(String(reading_pitch));
 
+  //Translation
+  translationMessage trans_msg; ////?????
+  // Read the values of the potentiometers
+  int reading_X = analogRead(TRANSX_PIN);
+  int reading_Y = analogRead(TRANSY_PIN);
+  int reading_Z = analogRead(TRANSZ_PIN);
+  // Convert them in KerbalSimpit range
+  int16_t x = map(reading_X, 0, 1023, INT16_MIN, INT16_MAX);
+  int16_t y = map(reading_Y, 0, 1023, INT16_MIN, INT16_MAX);
+  int16_t z = map(reading_Z, 0, 1023, INT16_MIN, INT16_MAX);
+  // Put those values in the message
+  trans_msg.setX(x);
+  trans_msg.setY(y);
+  trans_msg.setZ(z);
+  // Send the message
+  mySimpit.send(TRANSLATION_MESSAGE, trans_msg);
+  ///mySimpit.printToKSP(String(reading_pitch));
 }
 
 void messageHandler(byte messageType, byte msg[], byte msgSize) {
