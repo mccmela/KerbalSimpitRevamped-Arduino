@@ -6,9 +6,9 @@ eventually remove when the buttons are in place.
 
 //BUTTONS - 10 pins
 const int STAGE_PIN = 3;
-const int RCS_SWITCH_PIN = 6; // the pin used for controlling RCS.
-const int GEAR_PIN = 7;
-const int SAS_SWITCH_PIN = 5; // the pin used for controlling SAS.
+const int RCS_SWITCH_PIN = 5; // the pin used for controlling RCS.
+const int GEAR_PIN = 6;
+const int SAS_SWITCH_PIN = 7; // the pin used for controlling SAS.
 const int LIGHTS_PIN = 4;
 /// const int solar panels
 /// const int ladder
