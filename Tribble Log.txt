@@ -11,3 +11,8 @@ Design
 
 - Red guard switch is in the way of the joysticks, cannot get full deflection. 
 
+
+Wants
+
+- Add map button
+- Add LCD "time to maneuver"
