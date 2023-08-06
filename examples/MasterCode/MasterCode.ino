@@ -227,6 +227,7 @@ throttleMessage throttle_msg;
   int reading_pitch = analogRead(PITCH_PIN);
   int reading_roll = analogRead(ROLL_PIN);
   int reading_yaw = analogRead(YAW_PIN);
+
   // Convert them in KerbalSimpit range
   int16_t pitch = map(reading_pitch, 0, 1023, INT16_MIN, INT16_MAX);
     if ((pitch > -3200) && (pitch < 3200)) {
@@ -247,9 +248,16 @@ throttleMessage throttle_msg;
       ///mySimpit.printToKSP("Roll Alive Zone",PRINT_TO_SCREEN);
      }
   int16_t yaw = map(reading_yaw, 0, 1023, INT16_MIN, INT16_MAX);
+    if ((yaw > -3200) && (yaw < 3200)) {
+      rot_msg.setYaw(0);
+      ///mySimpit.printToKSP("Yaw Dead Zone",PRINT_TO_SCREEN);
+    } 
+    else {
+      rot_msg.setYaw(yaw);
+      ///mySimpit.printToKSP("Yaw Alive Zone",PRINT_TO_SCREEN);
+     }
   // Put those values in the message
-  rot_msg.setRoll(roll);
-  rot_msg.setYaw(yaw);
+  
   // Send the message
   mySimpit.send(ROTATION_MESSAGE, rot_msg);
   ///mySimpit.printToKSP(String(pitch), PRINT_TO_SCREEN); ///String(reading_pitch)
