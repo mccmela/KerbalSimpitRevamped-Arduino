@@ -1,0 +1,13 @@
+5-6 Aug
+
+Coding
+
+- Momentary Buttons: need to be coded into a toggle function rather than a switch that needs to be depressed. Right now, it only activates/deactviates when held in the down position. 
+- Button D6 does not work. 
+
+
+
+Design
+
+- Red guard switch is in the way of the joysticks, cannot get full deflection. 
+
