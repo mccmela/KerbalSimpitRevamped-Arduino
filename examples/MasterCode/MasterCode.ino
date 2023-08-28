@@ -268,14 +268,39 @@ throttleMessage throttle_msg;
   int reading_X = analogRead(TRANSX_PIN);
   int reading_Y = analogRead(TRANSY_PIN);
   int reading_Z = analogRead(TRANSZ_PIN);
+
+
   // Convert them in KerbalSimpit range
   int16_t x = map(reading_X, 0, 1023, INT16_MIN, INT16_MAX);
+    if ((x > -3200) && (x < 3200)) {
+     trans_msg.setX(0);
+     ///mySimpit.printToKSP("X Dead Zone",PRINT_TO_SCREEN);
+    } 
+    else {
+      trans_msg.setX(x);
+      ///mySimpit.printToKSP("X Alive Zone",PRINT_TO_SCREEN);
+    }
+
   int16_t y = map(reading_Y, 0, 1023, INT16_MIN, INT16_MAX);
+    if ((y > -3200) && (y < 3200)) {
+     trans_msg.setY(0);
+     ///mySimpit.printToKSP("X Dead Zone",PRINT_TO_SCREEN);
+    } 
+    else {
+      trans_msg.setY(y);
+      ///mySimpit.printToKSP("X Alive Zone",PRINT_TO_SCREEN);
+    }
+    
   int16_t z = map(reading_Z, 0, 1023, INT16_MIN, INT16_MAX);
-  // Put those values in the message
-  trans_msg.setX(x);
-  trans_msg.setY(y);
-  trans_msg.setZ(z);
+    if ((z > -3200) && (z < 3200)) {
+     trans_msg.setZ(0);
+     ///mySimpit.printToKSP("X Dead Zone",PRINT_TO_SCREEN);
+    } 
+    else {
+      trans_msg.setZ(z);
+      ///mySimpit.printToKSP("X Alive Zone",PRINT_TO_SCREEN);
+    }
+  
   // Send the message
   mySimpit.send(TRANSLATION_MESSAGE, trans_msg);
   ///mySimpit.printToKSP(String(reading_pitch));
