@@ -4,20 +4,21 @@ eventually remove when the buttons are in place.
 */
 #include "KerbalSimpit.h" //deleted const int ledPin = 13 from Stage.Demo
 
-//BUTTONS - 10 pins
-const int STAGE_PIN = 3;
-const int RCS_SWITCH_PIN = 5; // the pin used for controlling RCS.
-const int GEAR_PIN = 6;
-const int SAS_SWITCH_PIN = 7; // the pin used for controlling SAS.
-const int LIGHTS_PIN = 4;
-/// const int solar panels
+//BUTTONS - 10 pins CYRRENTLY HAVE 2 LATCHING WHITE PINS UNWIRED / LATCHING (PINS 7 & 6)
+
+const int RCS_SWITCH_PIN = 13; // the pin used for controlling RCS. Latching
+const int SAS_SWITCH_PIN = 12; // the pin used for controlling SAS. Latching
+const int LIGHTS_PIN = 11; //Latching
+const int GEAR_PIN = 10; //Latching
+/// const int solar panels 
 /// const int ladder
 /// const int chutes? 
 ///const int BRAKES_PIN = 8;
-const int ABORT_PIN = 2;
+const int STAGE_PIN = 4; // Momentary
+const int ABORT_PIN = 3; //now the map button
 
 //ANALOG - 7 PINS
-const int THROTTLE_PIN = A0; // the pin used for controlling throttle
+const int THROTTLE_PIN = A15; // the pin used for controlling throttle
 const int PITCH_PIN = A14;
 const int ROLL_PIN = A13;    // the pin used for controlling roll
 const int YAW_PIN = A12;     // the pin used for controlling yaw
